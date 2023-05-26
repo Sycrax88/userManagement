@@ -1,6 +1,8 @@
 package com.ospinadev.userManagement.dao;
 
 import com.ospinadev.userManagement.models.User;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
@@ -11,19 +13,50 @@ import java.util.List;
 @Transactional
 public class UserDaoImp implements UserDao{
 
-    @PersistenceUnit
-    private EntityManagerFactory entityManagerFactory;
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Override
-    public User get(Long id) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+    public List<User> getAll() {
+        String query = "FROM User";
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public User getById(Long id) {
         return entityManager.find(User.class, id);
     }
 
     @Override
-    public List<User> getAll() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        TypedQuery<User> query = entityManager.createQuery("SELECT u FROM User u", User.class);
-        return query.getResultList();
+    public User getByEmail(String email) {
+        String query = "FROM User WHERE email = :email";
+        return entityManager.createQuery(query, User.class)
+                .setParameter("email", email)
+                .getSingleResult();
     }
+
+    @Override
+    public void delete(Long id) {
+        User user = this.getById(id);
+        entityManager.remove(user);
+    }
+
+    @Override
+    public void register(User user) {
+        entityManager.merge(user);
+    }
+
+    @Override
+    public boolean verifyCredentials(User user) {
+        User foundUser = this.getByEmail(user.getEmail());
+        System.out.println("SOG: "+ foundUser);
+        System.out.println("SOG: "+ user);
+
+        String passwordHashed = foundUser.getPassword();
+
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        System.out.println("SOG "+argon2.verify(passwordHashed, user.getPassword().toCharArray()));
+        return argon2.verify(passwordHashed, user.getPassword().toCharArray());
+    }
+
 }
