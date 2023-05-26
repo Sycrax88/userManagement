@@ -15,5 +15,5 @@ public interface UserDao {
 
     User getByEmail(String email);
 
-    boolean verifyCredentials(User user);
+    User getByCredentials(User user);
 }

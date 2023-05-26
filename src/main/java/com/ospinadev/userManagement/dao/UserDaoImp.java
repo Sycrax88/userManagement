@@ -47,7 +47,7 @@ public class UserDaoImp implements UserDao{
     }
 
     @Override
-    public boolean verifyCredentials(User user) {
+    public User getByCredentials(User user) {
         User foundUser = this.getByEmail(user.getEmail());
         System.out.println("SOG: "+ foundUser);
         System.out.println("SOG: "+ user);
@@ -56,7 +56,10 @@ public class UserDaoImp implements UserDao{
 
         Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
         System.out.println("SOG "+argon2.verify(passwordHashed, user.getPassword().toCharArray()));
-        return argon2.verify(passwordHashed, user.getPassword().toCharArray());
+        if(argon2.verify(passwordHashed, user.getPassword().toCharArray())){
+            return foundUser;
+        }
+        return null;
     }
 
 }

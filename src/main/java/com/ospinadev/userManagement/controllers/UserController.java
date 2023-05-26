@@ -2,11 +2,13 @@ package com.ospinadev.userManagement.controllers;
 
 import com.ospinadev.userManagement.dao.UserDao;
 import com.ospinadev.userManagement.models.User;
+import com.ospinadev.userManagement.utils.JWTUtil;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -15,14 +17,27 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private JWTUtil jwtUtil;
+
+    private boolean validateToken(String token){
+        String userId = jwtUtil.getKey(token);
+        return userId != null;
+    }
+
     @RequestMapping(value = "api/users", method = RequestMethod.GET)
-    public List<User> getAll(){
-        return userDao.getAll();
+    public List<User> getAll(@RequestHeader(value="Authorization") String token){
+        if (validateToken(token))
+            return userDao.getAll();
+        return new ArrayList<>();
     }
 
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.GET)
-    public User getById(@PathVariable Long id){
-        return userDao.getById(id);
+    public User getById(@RequestHeader(value="Authorization") String token,
+            @PathVariable Long id){
+        if (validateToken(token))
+            return userDao.getById(id);
+        return null;
     }
 
     @RequestMapping(value = "api/users/email/{email}", method = RequestMethod.GET)
@@ -39,8 +54,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Long id){
-        userDao.delete(id);
+    public void delete(@RequestHeader(value="Authorization") String token,
+                       @PathVariable Long id){
+        if (validateToken(token))
+            userDao.delete(id);
     }
 
 }

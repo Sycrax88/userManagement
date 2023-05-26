@@ -27,7 +27,9 @@ async function loginUser() {
         const responseBody  = await response.text();
         console.log(responseBody);
 
-        if (responseBody  === 'OK'){
+        if (responseBody  != 'FAIL'){
+            localStorage.token = responseBody;
+            localStorage.email = userData.email;
             alert("Correct Password!")
             window.location.href = 'users.html';
         } else{
