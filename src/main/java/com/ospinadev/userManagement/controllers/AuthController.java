@@ -24,7 +24,13 @@ public class AuthController {
             return tokenJwt;
         }
         return "Fail";
-
     }
 
+    /*@RequestMapping(value = "api/logout", method = RequestMethod.POST)
+    public String logout(@RequestHeader(value = "Authorization") String token){
+        if (token != null){
+
+        }
+    }
+*/
 }

@@ -25,11 +25,13 @@ async function loginUser() {
         });
 
         const responseBody  = await response.text();
-        console.log(responseBody);
 
         if (responseBody  != 'FAIL'){
+            loggedUser = await getUserByEmail(userData.email);
+
             localStorage.token = responseBody;
             localStorage.email = userData.email;
+            localStorage.firstName = loggedUser.name;
             alert("Correct Password!")
             window.location.href = 'users.html';
         } else{
@@ -60,4 +62,16 @@ function validateData(data) {
     }
 
     return true;
+}
+
+async function getUserByEmail(email){
+    const response = await fetch('api/users/email/' + email, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        const foundUser = await response.json();
+        return foundUser;
 }
