@@ -47,10 +47,13 @@ public class UserDaoImp implements UserDao{
     }
 
     @Override
+    public void update(User user){
+        entityManager.merge(user);
+    }
+
+    @Override
     public User getByCredentials(User user) {
         User foundUser = this.getByEmail(user.getEmail());
-        System.out.println("SOG: "+ foundUser);
-        System.out.println("SOG: "+ user);
 
         String passwordHashed = foundUser.getPassword();
 

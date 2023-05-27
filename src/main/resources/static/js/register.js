@@ -59,7 +59,7 @@ async function registerUser() {
         alert("The user has been successfully registered!")
         window.location.href = 'login.html';
         } catch (error) {
-            console.error(error);
+            console.error("An error occurred:", error);
             alert('An error occurred while processing the request.');
         }
 }

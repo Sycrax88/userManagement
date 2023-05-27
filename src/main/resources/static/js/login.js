@@ -32,13 +32,13 @@ async function loginUser() {
             localStorage.token = responseBody;
             localStorage.email = userData.email;
             localStorage.firstName = loggedUser.name;
-            alert("Correct Password!")
+            localStorage.id = loggedUser.id;
             window.location.href = 'users.html';
         } else{
             alert("Wrong Password!")
         }
     } catch (error) {
-        console.error(error);
+        console.error("An error occurred:", error);
         alert("An error occurred while processing the request.");
     }
 }

@@ -60,4 +60,27 @@ public class UserController {
             userDao.delete(id);
     }
 
+    @RequestMapping(value = "api/users/{id}", method = RequestMethod.PUT)
+    public void update(@RequestHeader(value="Authorization") String token,
+                           @PathVariable Long id,
+                           @RequestBody User updatedUser){
+        if (validateToken(token)){
+            User existingUser = userDao.getById(id);
+            System.out.println("SOG existingUser1: "+ existingUser);
+            if (existingUser != null){
+                System.out.println("SOG existingUser2: "+ existingUser);
+                System.out.println("SOG updatedUser: "+ updatedUser);
+                // Actualizar los campos del usuario existente con los valores del objeto actualizado
+                existingUser.setName(updatedUser.getName());
+                existingUser.setLastName(updatedUser.getLastName());
+                existingUser.setPhone(updatedUser.getPhone());
+                System.out.println("SOG existingUser3: "+ existingUser);
+
+
+                userDao.update(existingUser);
+            }
+        }
+    }
+
+
 }
