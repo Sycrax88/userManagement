@@ -22,6 +22,8 @@ async function loadUsers(){
     const users = await request.json();
     console.log(users);
 
+    const entriesText = document.getElementById('entriesText');
+    entriesText.textContent = `Showing ${users.length} entries`;
 
     let listHtml = '';
     for (let user of users){
