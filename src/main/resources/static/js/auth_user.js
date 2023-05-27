@@ -5,3 +5,7 @@ $(document).ready(function() {
 function updateUserName(){
     document.getElementById('txtUserName').outerHTML = localStorage.firstName + " ";
 }
+
+function logout(){
+    localStorage.clear();
+}
