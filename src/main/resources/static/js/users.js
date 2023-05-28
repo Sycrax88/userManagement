@@ -19,7 +19,7 @@ async function loadUsers() {
         userTable.destroy();
     }
 
-    const userRoleId = getUserRole();
+    const userRoleId = await getUserRole();
 
     const request = await fetch('api/users', {
         method: 'GET',
@@ -34,7 +34,9 @@ async function loadUsers() {
         user.lastName,
         user.email,
         user.phone,
-        parseInt(userRoleId) === 1 ? '<a href="#" onclick="deleteUser(' + user.id + ')" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>' : 'Actions Only Available for Admins'
+        parseInt(userRoleId) === 1 ? '<a href="profile.html?userId=' + user.id + '" class="btn btn-info btn-circle btn-sm"><i class="fas fa-user"></i></a> ' +
+                                    '<a href="#" onclick="deleteUser(' + user.id + ')" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>' :
+                                    'Actions Only Available for Admins'
     ]);
 
     // Configurar las columnas de la tabla
