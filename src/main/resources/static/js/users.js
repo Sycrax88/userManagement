@@ -19,6 +19,8 @@ async function loadUsers() {
         userTable.destroy();
     }
 
+    const userRoleId = getUserRole();
+
     const request = await fetch('api/users', {
         method: 'GET',
         headers: getHeaders()
@@ -32,7 +34,7 @@ async function loadUsers() {
         user.lastName,
         user.email,
         user.phone,
-        '<a href="#" onclick="deleteUser(' + user.id + ')" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>'
+        parseInt(userRoleId) === 1 ? '<a href="#" onclick="deleteUser(' + user.id + ')" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>' : 'Actions Only Available for Admins'
     ]);
 
     // Configurar las columnas de la tabla
@@ -61,4 +63,13 @@ async function deleteUser(id){
         });
     }
     location.reload();
+}
+
+async function getUserRole(){
+    const response = await fetch('api/roles/'+ localStorage.id, {
+        method: 'GET',
+        headers: getHeaders()
+    });
+    const userRoleId  = await response.text();
+    return userRoleId;
 }
